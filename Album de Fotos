@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álbum de Fotos - João João e Luiz Muel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #00CED1;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .gallery img {
+            margin: 10px;
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        ÁLBUM DE FOTOS
+    </div>
+
+    <div class="gallery">
+        <img src="ARQUIVOFOTO1.jpg" alt="Foto 1">
+        <img src="ARQUIVOFOTO2.jpg" alt="Foto 2">
+        <img src="ARQUIVOFOTO3.jpg" alt="Foto 3">
+        <img src="ARQUIVOFOTO4.jpg" alt="Foto 4">
+        <img src="ARQUIVOFOTO5.jpg" alt="Foto 5">
+        <img src="ARQUIVOFOTO6.jpg" alt="Foto 6">
+        <img src="ARQUIVOFOTO1.jpg" alt="Foto 7">
+        <img src="ARQUIVOFOTO2.jpg" alt="Foto 8">
+        <img src="ARQUIVOFOTO3.jpg" alt="Foto 9">
+        <img src="ARQUIVOFOTO4.jpg" alt="Foto 10">
+        <img src="ARQUIVOFOTO5.jpg" alt="Foto 11">
+        <img src="ARQUIVOFOTO6.jpg" alt="Foto 12">
+    </div>
+</body>
+</html>
