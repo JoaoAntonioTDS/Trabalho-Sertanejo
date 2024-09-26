@@ -1,46 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contatos baroes da dopamina</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <nav class="menu">
-        <ul>
-            <li><a href="http://127.0.0.1:5500/homepage.html">Início</a></li>
-            <li><a href="http://127.0.0.1:5500/historia.html">Historia</a></li>
-            <li><a href="http://127.0.0.1:5500/agenda.html">Agenda</a></li>
-            <li><a href="http://127.0.0.1:5500/discografia.html">Discografia</a></li>
-            <li><a href="#fotos">Fotos</a></li>
-            <li><a href="#noticia">Musicas</a></li>
-            <li><a href="http://127.0.0.1:5500/index.html#sobre">Contato</a></li>
-        </ul>
-    </nav>
-    
-    <div class="bg-img">
-        <div class="overlay">
-            <h1 class="title">CONTATO:</h1>
-            <h3>——————————————————</h3>
-            <p class="description">Confira a forma de contato com a banda:</p>
-            <div class="contact-sections">
-                <div class="section">
-                    <h2>SHOWS E EVENTOS:</h2>
-                    <p>Telefone: 45. 9119-1511<br>E-mail:contato@baroesdadopamina.com.br<br>Endereço: Av. Javier Koelbl - Jardim Eliza I, Foz do Iguaçu - PR <br>CEP: 85853-610 </p>
-                </div>
-                <div class="section">
-                    <h2>ASSESSORIA DE IMPRENSA</h2>
-                    <p>Telefone: (45) 99109-6775<br>E-mail: duduseduçao@assessoria.com.br
+<?php
 
-                        </p>
-                </div>
-                <div class="section">
-                    <h2>CENTRAL DE FÃS</h2>
-                    <p>Telefone: (45)9810-4929 <br>E-mail: centraldadopamina@joaojoaoluizmuel.com.br </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+function stressTest($level) {
+    switch ($level) {
+        case 1:
+            // Nível Normal: Pequeno processamento de CPU
+            echo "Nível Normal (1): Iniciando teste leve.\n";
+            for ($i = 0; $i < 100000; $i++) {
+                $result = sqrt($i); // Operação leve de cálculo
+            }
+            echo "Nível Normal (1): Teste concluído.\n";
+            break;
+
+        case 2:
+            // Nível Médio: Usa processamento mais intenso
+            echo "Nível Médio (2): Iniciando teste médio.\n";
+            for ($i = 0; $i < 100000000; $i++) {
+                $result = sqrt($i) * log($i + 1); // Operação matemática mais repetida e mais pesada
+            }
+            echo "Nível Médio (2): Teste concluído.\n";
+            break;
+
+        case 3:
+            // Nível Extremo: Usa processamento em paralelo com alta intensidade e sem limitações
+            echo "Nível Extremo (3): Iniciando teste extremo.\n";
+            $processCount = 8; // Mais processos para maior carga
+            $pids = [];
+
+            // Cria processos paralelos para sobrecarregar ao máximo a máquina
+            for ($p = 0; $p < $processCount; $p++) {
+                $pid = pcntl_fork();
+                if ($pid == -1) {
+                    die('Erro ao criar processo');
+                } elseif ($pid) {
+                    $pids[] = $pid; // Processo pai
+                } else {
+                    // Processo filho
+                    for ($i = 0; $i < 1000000000; $i++) {
+                        $result = sqrt($i) * log($i + 1) * rand(); // Operação intensiva e complexa
+                    }
+                    exit(0); // Processo filho termina aqui
+                }
+            }
+
+            // Espera os processos filhos terminarem
+            foreach ($pids as $pid) {
+                pcntl_waitpid($pid, $status);
+            }
+
+            echo "Nível Extremo (3): Teste concluído.\n";
+            break;
+
+        default:
+            echo "Nível inválido. Escolha entre 1, 2 ou 3.\n";
+    }
+}
+
+// Escolha o nível de estresse da CPU: 1 = leve, 2 = médio, 3 = extremo
+$level = intval($argv[1] ?? 1);
+stressTest($level);
+
+?>
