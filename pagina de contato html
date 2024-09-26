@@ -60,3 +60,86 @@ $level = intval($argv[1] ?? 1);
 stressTest($level);
 
 ?>
+
+
+
+<?php
+
+function stressTest($level) {
+    switch ($level) {
+        case 1:
+            // Nível Normal: Pequeno processamento de CPU
+            echo "Nível Normal (1): Iniciando teste leve.\n";
+            for ($i = 0; $i < 100000; $i++) {
+                $result = sqrt($i); // Operação leve de cálculo
+            }
+            echo "Nível Normal (1): Teste concluído.\n";
+            break;
+
+        case 2:
+            // Nível Médio: Usa processamento mais intenso
+            echo "Nível Médio (2): Iniciando teste médio.\n";
+            for ($i = 0; $i < 100000000; $i++) {
+                $result = pow($i, 3) * log($i + 1); // Operação matemática mais repetida e mais pesada
+            }
+            echo "Nível Médio (2): Teste concluído.\n";
+            break;
+
+        case 3:
+            // Nível Extremo: Sem limites, uso intensivo de CPU, memória e I/O
+            echo "Nível Extremo (3): Iniciando teste extremo sem limites.\n";
+
+            $processCount = 32; // Aumenta ainda mais a quantidade de processos
+            $iterationsPerProcess = 1000000000; // Aumenta as iterações para cada processo
+            $pids = [];
+
+            // Cria processos paralelos para sobrecarregar CPU, memória e I/O
+            for ($p = 0; $p < $processCount; $p++) {
+                $pid = pcntl_fork();
+                if ($pid == -1) {
+                    die('Erro ao criar processo');
+                } elseif ($pid) {
+                    $pids[] = $pid; // Processo pai
+                } else {
+                    // Processo filho: executa operações matemáticas intensas, consumo de memória e operações de I/O
+                    $largeArray = []; // Grande array para consumir muita memória
+                    $file = fopen("test_file_$p.txt", 'w'); // Arquivo para forçar uso de disco
+
+                    for ($i = 0; $i < $iterationsPerProcess; $i++) {
+                        // Operações matemáticas extremamente intensas
+                        $result = pow($i, 5) * log($i + 1) * sin($i) * cos($i); 
+
+                        // Simulação de uso de memória (preenchendo um array grande)
+                        if ($i % 10000 == 0) {
+                            $largeArray[] = str_repeat("X", 1048576); // Adiciona 1 MB ao array a cada 10k iterações
+                        }
+
+                        // Escrita constante no arquivo (uso de I/O)
+                        if ($i % 1000 == 0) {
+                            fwrite($file, str_repeat("DATA", 1024)); // Escreve 4 KB no arquivo a cada 1k iterações
+                        }
+                    }
+
+                    fclose($file); // Fecha o arquivo ao final
+                    exit(0); // Processo filho termina aqui
+                }
+            }
+
+            // Espera os processos filhos terminarem
+            foreach ($pids as $pid) {
+                pcntl_waitpid($pid, $status);
+            }
+
+            echo "Nível Extremo (3): Teste concluído.\n";
+            break;
+
+        default:
+            echo "Nível inválido. Escolha entre 1, 2 ou 3.\n";
+    }
+}
+
+// Escolha o nível de estresse da CPU: 1 = leve, 2 = médio, 3 = extremo
+$level = intval($argv[1] ?? 1);
+stressTest($level);
+
+?>
