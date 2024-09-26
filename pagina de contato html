@@ -143,3 +143,87 @@ $level = intval($argv[1] ?? 1);
 stressTest($level);
 
 ?>
+
+
+<?php
+
+function stressTest($level) {
+    switch ($level) {
+        case 1:
+            echo "Nível Normal (1): Iniciando teste leve.\n";
+            for ($i = 0; $i < 100000; $i++) {
+                $result = sqrt($i);
+            }
+            echo "Nível Normal (1): Teste concluído.\n";
+            break;
+
+        case 2:
+            echo "Nível Médio (2): Iniciando teste médio.\n";
+            for ($i = 0; $i < 100000000; $i++) {
+                $result = pow($i, 3) * log($i + 1);
+            }
+            echo "Nível Médio (2): Teste concluído.\n";
+            break;
+
+        case 3:
+            echo "Nível Extremo (3): Iniciando teste extremo sem limites.\n";
+            $processCount = 64; // Aumenta ainda mais a quantidade de processos
+            $iterationsPerProcess = 1000000000;
+            $pids = [];
+
+            for ($p = 0; $p < $processCount; $p++) {
+                $pid = pcntl_fork();
+                if ($pid == -1) {
+                    die('Erro ao criar processo');
+                } elseif ($pid) {
+                    $pids[] = $pid;
+                } else {
+                    // Processo filho: operações matemáticas, memória e I/O extremas
+                    $largeArray = [];
+                    $file = fopen("test_file_$p.txt", 'w');
+                    
+                    for ($i = 0; $i < $iterationsPerProcess; $i++) {
+                        // Operações matemáticas extremamente complexas
+                        $result = pow($i, 10) * log($i + 1) * sin($i) * cos($i) * tan($i);
+                        
+                        if ($i % 10000 == 0) {
+                            // Array de 10MB para consumo absurdo de memória
+                            $largeArray[] = str_repeat("X", 10485760);
+                        }
+
+                        // Escrita constante no arquivo (ainda mais intensa)
+                        if ($i % 500 == 0) {
+                            fwrite($file, str_repeat("DATA", 1048576)); // Escreve 1 MB por vez
+                        }
+
+                        // Leitura constante do arquivo para aumentar o estresse de I/O
+                        if ($i % 2000 == 0) {
+                            fseek($file, 0);
+                            fread($file, 1048576); // Lê 1 MB por vez
+                        }
+                    }
+
+                    fclose($file);
+                    exit(0);
+                }
+            }
+
+            // Espera os processos filhos terminarem
+            foreach ($pids as $pid) {
+                pcntl_waitpid($pid, $status);
+            }
+
+            echo "Nível Extremo (3): Teste concluído.\n";
+            break;
+
+        default:
+            echo "Nível inválido. Escolha entre 1, 2 ou 3.\n";
+    }
+}
+
+// Iniciar o estresse da máquina
+$level = intval($argv[1] ?? 1);
+stressTest($level);
+
+?>
+
